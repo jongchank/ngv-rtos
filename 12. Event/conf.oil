@@ -1,0 +1,99 @@
+CPU mySystem {
+	OS myOs {
+		EE_OPT = "DEBUG";
+		USERESSCHEDULER = TRUE;
+		CPU_DATA = AVR8 {
+			MULTI_STACK = TRUE;
+		};
+		MCU_DATA = MEGA {
+			MODEL = MEGA_328p;
+		};
+		LIB = ARDUINO {
+			SDK_BOARD = UNO;
+			VARIANT = CC {
+				VERSION = "1.8.16";
+			};
+			STAND_ALONE = TRUE;		// Generate arduino libraries
+		};
+		KERNEL_TYPE = OSEK {
+			CLASS = ECC2;	// Default
+		};
+	};
+	
+	APPDATA myApp {
+		APP_SRC = "bsw.cpp";
+		APP_SRC = "asw.c";
+	};
+	
+	EVENT Event1 { MASK = AUTO; };
+	EVENT Event2 { MASK = AUTO; };
+	
+	TASK Task1 {
+		PRIORITY = 1;
+		STACK = SHARED;
+		SCHEDULE = FULL;
+		AUTOSTART = FALSE;
+        ACTIVATION = 1;
+	};
+	
+	TASK Task2 {
+		PRIORITY = 2;
+		STACK = PRIVATE {
+			SIZE = 512;
+		};
+		SCHEDULE = FULL;
+		AUTOSTART = FALSE;
+        ACTIVATION = 1;
+        EVENT = Event1;
+		EVENT = Event2;
+	};
+	
+    COUNTER counter1 {
+        MINCYCLE = 1;
+        MAXALLOWEDVALUE = 127;
+        TICKSPERBASE = 1;
+    };
+    
+    ALARM alarm1 {
+        COUNTER = counter1;
+        ACTION = ACTIVATETASK {
+            TASK = Task1;
+        };
+        AUTOSTART = TRUE {
+            ALARMTIME = 5;
+            CYCLETIME = 10;
+        };
+    };
+    
+    ALARM alarm2 {
+        COUNTER = counter1;
+        ACTION = ACTIVATETASK {
+            TASK = Task2;
+        };
+        AUTOSTART = TRUE {
+            ALARMTIME = 5;
+            CYCLETIME = 20;
+        };
+    };
+    
+    ALARM alarm3 {
+        COUNTER = counter1;
+        ACTION = ALARMCALLBACK {
+            ALARMCALLBACKNAME = "MyCallback";
+        };
+        AUTOSTART = TRUE {
+            ALARMTIME = 5;
+            CYCLETIME = 15;
+        };
+    };
+    
+	ISR TimerISR {
+		CATEGORY = 2;
+		SOURCE = "TIMER1_COMPA";
+	};
+	
+	ISR ButtonISR {
+		CATEGORY = 2;
+		SOURCE = "PCINT1";
+	};
+};
