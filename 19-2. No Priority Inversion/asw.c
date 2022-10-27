@@ -3,14 +3,14 @@
 
 volatile unsigned long shared = 0;
 
-MutexType s1;
+//MutexType s1;
 
 ISR2(TimerISR)
 {
     static long c = -5;
     printfSerial("\n%4ld: ", ++c);
     if(c == -5) {
-    	InitMutex(&s1, Event1);
+    	//InitMutex(&s1, Event1);
     }
     else if (c == 0) {
     	ActivateTask(TaskL);
