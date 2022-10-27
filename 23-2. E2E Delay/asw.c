@@ -63,7 +63,7 @@ void Runnable_7(void)
 ISR2(TimerISR)
 {
     static long c = -5;
-
+    IncrementCounter(counter1);
     printfSerial("\n%4ld: [%s] ", ++c, OUT(R7_out));
 }
 
