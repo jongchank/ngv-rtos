@@ -1,0 +1,101 @@
+CPU mySystem {
+    OS myOs {
+        EE_OPT = "DEBUG";
+        USERESSCHEDULER = TRUE;
+        CPU_DATA = AVR8 {
+            MULTI_STACK = TRUE;
+        };
+        MCU_DATA = MEGA {
+            MODEL = MEGA_328p;
+        };
+        LIB = ARDUINO {
+            SDK_BOARD = UNO;
+            VARIANT = CC {
+                VERSION = "1.8.16";
+            };
+            STAND_ALONE = TRUE;     // Generate arduino libraries
+        };
+        KERNEL_TYPE = OSEK {
+            CLASS = ECC2;   // Default
+        };
+    };
+    
+    APPDATA myApp {
+        APP_SRC = "bsw.cpp";
+        APP_SRC = "asw.c";
+    };
+    
+    TASK Task_2s {
+        PRIORITY = 3;       
+        STACK = PRIVATE {
+            SIZE = 256;
+        };
+        SCHEDULE = FULL;
+        AUTOSTART = FALSE;
+        ACTIVATION = 1;
+    };
+    
+    TASK Task_4s {
+        PRIORITY = 2;       
+        STACK = PRIVATE {
+            SIZE = 256;
+        };
+        SCHEDULE = FULL;
+        AUTOSTART = FALSE;
+        ACTIVATION = 1;
+    };
+        
+    TASK Task_8s {
+        PRIORITY = 1;       
+        STACK = PRIVATE {
+            SIZE = 256;
+        };
+        SCHEDULE = FULL;
+        AUTOSTART = FALSE;
+        ACTIVATION = 1;
+    };
+    
+    COUNTER counter1 {
+        MINCYCLE = 1;
+        MAXALLOWEDVALUE = 65535;
+        TICKSPERBASE = 1;
+    };
+    
+    SCHEDULETABLE SchedTab1 {
+        COUNTER = counter1;
+        DURATION = 8;
+        REPEATING = TRUE;
+        AUTOSTART = TRUE {
+            START_VALUE = 5;
+        };
+        EXPIRE_POINT = ACTION {
+            EXPIRE_VALUE = 0;
+            ACTION = ACTIVATETASK { TASK = Task_2s; };
+            ACTION = ACTIVATETASK { TASK = Task_4s; };
+            ACTION = ACTIVATETASK { TASK = Task_8s; };
+        };
+        EXPIRE_POINT = ACTION {
+            EXPIRE_VALUE = 2;
+            ACTION = ACTIVATETASK { TASK = Task_2s; };
+        };
+        EXPIRE_POINT = ACTION {
+            EXPIRE_VALUE = 4;      
+            ACTION = ACTIVATETASK { TASK = Task_2s; };
+            ACTION = ACTIVATETASK { TASK = Task_4s; };
+        };
+        EXPIRE_POINT = ACTION {
+            EXPIRE_VALUE = 6;
+            ACTION = ACTIVATETASK { TASK = Task_2s; };
+        };
+    };
+    
+    ISR ButtonISR {
+        CATEGORY = 2;
+        SOURCE = "PCINT1";
+    };
+    
+    ISR TimerISR {
+        CATEGORY = 2;
+        SOURCE = "TIMER1_COMPA";
+    };
+};

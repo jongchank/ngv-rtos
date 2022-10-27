@@ -1,0 +1,80 @@
+CPU mySystem {
+    OS myOs {
+        EE_OPT = "DEBUG";
+        USERESSCHEDULER = TRUE;
+        CPU_DATA = AVR8 {
+            MULTI_STACK = TRUE;
+        };
+        MCU_DATA = MEGA {
+            MODEL = MEGA_328p;
+        };
+        LIB = ARDUINO {
+            SDK_BOARD = UNO;
+            VARIANT = CC {
+                VERSION = "1.8.16";
+            };
+            STAND_ALONE = TRUE;     // Generate arduino libraries
+        };
+        KERNEL_TYPE = OSEK {
+            CLASS = ECC2;   // Default
+        };
+    };
+    
+    APPDATA myApp {
+        APP_SRC = "bsw.cpp";
+        APP_SRC = "asw.c";
+    };
+    
+    EVENT Event1 { MASK = AUTO; };
+    
+    TASK TaskH {
+        PRIORITY = 3;       
+        STACK = PRIVATE {
+            SIZE = 256;
+        };
+        SCHEDULE = FULL;
+        AUTOSTART = FALSE;
+        ACTIVATION = 1;
+        EVENT = Event1;
+    };
+            
+    TASK TaskL {
+        PRIORITY = 1;       
+        STACK = PRIVATE {
+            SIZE = 256;
+        };
+        SCHEDULE = FULL;
+        AUTOSTART = FALSE;
+        ACTIVATION = 1;
+    };
+    
+    COUNTER counter1 {
+        MINCYCLE = 1;
+        MAXALLOWEDVALUE = 65535;
+        TICKSPERBASE = 1;
+    };
+    
+    SCHEDULETABLE SchedTab1 {
+        COUNTER = counter1;
+        DURATION = 10;
+        REPEATING = TRUE;
+        AUTOSTART = TRUE {
+            START_VALUE = 5;
+        };
+        EXPIRE_POINT = ACTION {
+            EXPIRE_VALUE = 0;
+            ACTION = ACTIVATETASK { TASK = TaskH; };
+            ACTION = ACTIVATETASK { TASK = TaskL; };
+        };
+        EXPIRE_POINT = ACTION {
+            EXPIRE_VALUE = 5;
+            ACTION = ACTIVATETASK { TASK = TaskH; };
+            ACTION = SETEVENT { TASK = TaskL; EVENT = Event1; };
+        };
+    };
+    
+    ISR TimerISR {
+        CATEGORY = 2;
+        SOURCE = "TIMER1_COMPA";
+    };
+};
