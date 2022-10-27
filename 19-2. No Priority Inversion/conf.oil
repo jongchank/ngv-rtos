@@ -26,7 +26,7 @@ CPU mySystem {
 		APP_SRC = "mutex.c";
 	};
     
-    EVENT Event1 { MASK = AUTO; };
+    //EVENT Event1 { MASK = AUTO; };
     
     RESOURCE S1 {
         RESOURCEPROPERTY = STANDARD;
@@ -40,7 +40,7 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
-        EVENT = Event1;
+        //EVENT = Event1;
         RESOURCE = S1;
     };
     
@@ -52,8 +52,6 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
-        EVENT = Event1;
-        RESOURCE = S1;
     };
         
     TASK TaskL {
@@ -64,7 +62,7 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
-        EVENT = Event1;
+        RESOURCE = S1;
     };
     
 	ISR TimerISR {
