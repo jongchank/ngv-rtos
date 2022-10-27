@@ -1,4 +1,4 @@
-# ###*B*###
+
 # Erika Enterprise, version 3
 # 
 # Copyright (C) 2017 - 2019 Evidence s.r.l.
