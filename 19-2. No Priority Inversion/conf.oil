@@ -62,6 +62,7 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
+        //EVENT = Event1;
         RESOURCE = S1;
     };
     
