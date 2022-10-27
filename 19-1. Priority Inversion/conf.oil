@@ -37,7 +37,6 @@ CPU mySystem {
         AUTOSTART = FALSE;
         ACTIVATION = 1;
         EVENT = Event1;
-        RESOURCE = S1;
     };
     
     TASK TaskM {
@@ -48,7 +47,6 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
-        EVENT = Event1;
     };
         
     TASK TaskL {
@@ -59,7 +57,7 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
-        RESOURCE = S1;
+        EVENT = Event1;
     };
     
 	ISR TimerISR {
