@@ -59,6 +59,7 @@ CPU mySystem {
         SCHEDULE = FULL;
         AUTOSTART = FALSE;
         ACTIVATION = 1;
+        RESOURCE = S1;
     };
     
 	ISR TimerISR {
